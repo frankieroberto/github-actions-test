@@ -1,3 +1,4 @@
+# frozen_string_literal: true.
 ruby '2.5.5'
 
 group :development, :test do
