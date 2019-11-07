@@ -3,7 +3,7 @@ name: Ruby code style
 on: [push]
 
 jobs:
-  build:
+  code_style:
 
     runs-on: ubuntu-latest
 
