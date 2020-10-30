@@ -1,4 +1,5 @@
 #!/usr/bin/env ruby
+# frozen_string_literal: true
 
 require 'json'
 require 'octokit'
@@ -7,18 +8,24 @@ json = JSON.parse(STDIN.read)
 
 offences_count = 0
 
-json["files"].each do |file|
-  offences_count += file["offenses"].size
+json['files'].each do |file|
+  offences_count += file['offenses'].size
 end
 
-if offences_count > 0
+client = Octokit::Client.new(access_token: ENV.fetch('GITHUB_TOKEN'))
 
-  client = Octokit::Client.new(:access_token => ENV.fetch('GITHUB_TOKEN'))
+repo = ENV.fetch('GITHUB_REPOSITORY')
+pr = ENV.fetch('PULL_REQUEST_NUMBER')
 
-  client.create_pull_request_review(ENV.fetch("GITHUB_REPOSITORY"), ENV.fetch("PULL_REQUEST_NUMBER"), {
+if offences_count.zero?
+  client.create_pull_request_review(repo, pr, event: 'APPROVE')
+else
+  client.create_pull_request_review(
+    repo,
+    pr,
     event: 'REQUEST_CHANGES',
     body: "#{offences_count} code style issues need fixing"
-  })
+  )
 
   exit(1)
 end
