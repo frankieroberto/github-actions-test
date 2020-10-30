@@ -16,4 +16,5 @@ jobs:
     - name: Ruby code style
       run: |
         gem install rubocop
-        rubocop
+        gem install oktokit
+        rubocop --format json | ruby .github/lib/rubocop-annotations.rb
