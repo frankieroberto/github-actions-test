@@ -1,6 +1,10 @@
 name: Ruby code style
 
-on: [push]
+on: [pull_request]
+
+env:
+  PULL_REQUEST_NUMBER: ${{ github.event.number }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   code_style:
@@ -16,4 +20,5 @@ jobs:
     - name: Ruby code style
       run: |
         gem install rubocop
-        rubocop
+        gem install octokit
+        rubocop --format json | ruby .github/lib/rubocop-annotations.rb
