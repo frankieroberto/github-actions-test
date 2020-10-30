@@ -3,8 +3,6 @@
 require 'json'
 require 'octokit'
 
-client = Octokit::Client.new(:access_token => ENV['GITHUB_TOKEN'])
-
 json = JSON.parse(STDIN.read)
 
 offences_count = 0
@@ -14,6 +12,13 @@ json["files"].each do |file|
 end
 
 if offences_count > 0
-  puts "#{offences_count} code style issues need fixing"
+
+  client = Octokit::Client.new(:access_token => ENV.fetch('GITHUB_TOKEN'))
+
+  client.create_pull_request_review(ENV.fetch("GITHUB_REPOSITORY"), ENV.fetch("PULL_REQUEST_NUMBER"), {
+    event: 'REQUEST_CHANGES',
+    body: "#{offences_count} code style issues need fixing"
+  })
+
   exit(1)
 end
