@@ -4,6 +4,7 @@ on: [pull_request]
 
 env:
   PULL_REQUEST_NUMBER: ${{ github.event.number }}
+  GITHUB_TOKEN: ${{ secrets.GITHUB_TOKEN }}
 
 jobs:
   code_style:
